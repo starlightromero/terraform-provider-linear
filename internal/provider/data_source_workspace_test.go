@@ -16,7 +16,7 @@ func TestAccWorkspaceDataSource(t *testing.T) {
 				Config: testAccWorkspaceDataSourceConfig,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("data.linear_workspace.test", "id", "1e73fcad-aac6-4bbe-a5e1-e08cffe04eb5"),
-					resource.TestCheckResourceAttr("data.linear_workspace.test", "name", "terraform"),
+					resource.TestCheckResourceAttr("data.linear_workspace.test", "name", "terraform-test"),
 					resource.TestCheckResourceAttr("data.linear_workspace.test", "url_key", "terraform-test"),
 				),
 			},
