@@ -1383,7 +1383,7 @@ type TeamUpdateInput struct {
 	// [Internal] Whether to automatically create a Slack channel when a new project is created in this team.
 	SlackAutoCreateProjectChannel bool `json:"slackAutoCreateProjectChannel,omitempty"`
 	// The security settings for the team.
-	SecuritySettings TeamSecuritySettingsInput `json:"securitySettings"`
+	SecuritySettings *TeamSecuritySettingsInput `json:"securitySettings,omitempty"`
 	// Whether all members in the workspace can join the team. Only used for public teams.
 	AllMembersCanJoin bool `json:"allMembersCanJoin,omitempty"`
 	// When the team was retired.
@@ -1562,7 +1562,7 @@ func (v *TeamUpdateInput) GetSlackAutoCreateProjectChannel() bool {
 }
 
 // GetSecuritySettings returns TeamUpdateInput.SecuritySettings, and is useful for accessing the field via an interface.
-func (v *TeamUpdateInput) GetSecuritySettings() TeamSecuritySettingsInput { return v.SecuritySettings }
+func (v *TeamUpdateInput) GetSecuritySettings() *TeamSecuritySettingsInput { return v.SecuritySettings }
 
 // GetAllMembersCanJoin returns TeamUpdateInput.AllMembersCanJoin, and is useful for accessing the field via an interface.
 func (v *TeamUpdateInput) GetAllMembersCanJoin() bool { return v.AllMembersCanJoin }

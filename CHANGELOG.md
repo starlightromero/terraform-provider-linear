@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.5
+
+### Bug Fixes
+* Allow `linear_team` to be created on free plan workspaces
+
 ## 0.3.4
 
 ### Enhancements

@@ -30,6 +30,26 @@ import (
 var _ resource.Resource = &TeamResource{}
 var _ resource.ResourceWithImportState = &TeamResource{}
 
+func securitySetting() planmodifier.Bool {
+	return securitySettingModifier{}
+}
+
+type securitySettingModifier struct{}
+
+func (m securitySettingModifier) Description(ctx context.Context) string {
+	return m.MarkdownDescription(ctx)
+}
+
+func (m securitySettingModifier) MarkdownDescription(_ context.Context) string {
+	return "Use the value from the state if removed from the configuration."
+}
+
+func (m securitySettingModifier) PlanModifyBool(_ context.Context, req planmodifier.BoolRequest, resp *planmodifier.BoolResponse) {
+	if req.PlanValue.IsUnknown() || req.PlanValue.IsNull() {
+		resp.PlanValue = req.StateValue
+	}
+}
+
 func NewTeamResource() resource.Resource {
 	return &TeamResource{}
 }
@@ -258,28 +278,36 @@ func (r *TeamResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 				Default:             booldefault.StaticBool(false),
 			},
 			"allow_members_to_manage_team": schema.BoolAttribute{
-				MarkdownDescription: "Allow members to manage the team. **Default** `true`.",
+				MarkdownDescription: "Allow members to manage the team.",
 				Optional:            true,
 				Computed:            true,
-				Default:             booldefault.StaticBool(true),
+				PlanModifiers: []planmodifier.Bool{
+					securitySetting(),
+				},
 			},
 			"allow_members_to_manage_members": schema.BoolAttribute{
-				MarkdownDescription: "Allow members to manage members of the team. **Default** `true`.",
+				MarkdownDescription: "Allow members to manage members of the team.",
 				Optional:            true,
 				Computed:            true,
-				Default:             booldefault.StaticBool(true),
+				PlanModifiers: []planmodifier.Bool{
+					securitySetting(),
+				},
 			},
 			"allow_members_to_manage_labels": schema.BoolAttribute{
-				MarkdownDescription: "Allow members to manage labels in the team. **Default** `true`.",
+				MarkdownDescription: "Allow members to manage labels in the team.",
 				Optional:            true,
 				Computed:            true,
-				Default:             booldefault.StaticBool(true),
+				PlanModifiers: []planmodifier.Bool{
+					securitySetting(),
+				},
 			},
 			"allow_members_to_manage_templates": schema.BoolAttribute{
-				MarkdownDescription: "Allow members to manage templates in the team. **Default** `true`.",
+				MarkdownDescription: "Allow members to manage templates in the team.",
 				Optional:            true,
 				Computed:            true,
-				Default:             booldefault.StaticBool(true),
+				PlanModifiers: []planmodifier.Bool{
+					securitySetting(),
+				},
 			},
 			"triage": schema.SingleNestedAttribute{
 				MarkdownDescription: "Triage settings of the team.",
@@ -902,10 +930,10 @@ func (r *TeamResource) Read(ctx context.Context, req resource.ReadRequest, resp 
 	data.AutoArchivePeriod = types.Float64Value(team.AutoArchivePeriod)
 	data.AutoCloseParentIssues = types.BoolValue(team.AutoCloseParentIssues)
 	data.AutoCloseChildIssues = types.BoolValue(team.AutoCloseChildIssues)
-	data.AllowMembersToManageTeam = types.BoolValue(fromTeamRoleType(team.SecuritySettings, "teamManagement"))
-	data.AllowMembersToManageMembers = types.BoolValue(fromTeamRoleType(team.SecuritySettings, "memberManagement"))
-	data.AllowMembersToManageLabels = types.BoolValue(fromTeamRoleType(team.SecuritySettings, "labelManagement"))
-	data.AllowMembersToManageTemplates = types.BoolValue(fromTeamRoleType(team.SecuritySettings, "templateManagement"))
+	data.AllowMembersToManageTeam = types.BoolPointerValue(fromTeamRoleType(team.SecuritySettings, "teamManagement"))
+	data.AllowMembersToManageMembers = types.BoolPointerValue(fromTeamRoleType(team.SecuritySettings, "memberManagement"))
+	data.AllowMembersToManageLabels = types.BoolPointerValue(fromTeamRoleType(team.SecuritySettings, "labelManagement"))
+	data.AllowMembersToManageTemplates = types.BoolPointerValue(fromTeamRoleType(team.SecuritySettings, "templateManagement"))
 
 	if team.Parent != nil {
 		data.ParentId = types.StringValue(team.Parent.Id)
@@ -1061,12 +1089,6 @@ func update(ctx context.Context, client *graphql.Client, state TeamResourceModel
 	}
 
 	input := TeamUpdateInput{
-		SecuritySettings: TeamSecuritySettingsInput{
-			TeamManagement:     toTeamRoleType(data.AllowMembersToManageTeam.ValueBool()),
-			MemberManagement:   toTeamRoleType(data.AllowMembersToManageMembers.ValueBool()),
-			LabelManagement:    toTeamRoleType(data.AllowMembersToManageLabels.ValueBool()),
-			TemplateManagement: toTeamRoleType(data.AllowMembersToManageTemplates.ValueBool()),
-		},
 		Private:                        data.Private.ValueBool(),
 		ParentId:                       data.ParentId.ValueStringPointer(),
 		Description:                    data.Description.ValueStringPointer(),
@@ -1077,6 +1099,33 @@ func update(ctx context.Context, client *graphql.Client, state TeamResourceModel
 		AutoArchivePeriod:              data.AutoArchivePeriod.ValueFloat64(),
 		AutoCloseParentIssues:          data.AutoCloseParentIssues.ValueBool(),
 		AutoCloseChildIssues:           data.AutoCloseChildIssues.ValueBool(),
+	}
+
+	changedSecuritySettings := false
+	securitySettings := TeamSecuritySettingsInput{}
+
+	if data.AllowMembersToManageTeam.String() != state.AllowMembersToManageTeam.String() {
+		securitySettings.TeamManagement = toTeamRoleType(data.AllowMembersToManageTeam.ValueBool())
+		changedSecuritySettings = true
+	}
+
+	if data.AllowMembersToManageMembers.String() != state.AllowMembersToManageMembers.String() {
+		securitySettings.MemberManagement = toTeamRoleType(data.AllowMembersToManageMembers.ValueBool())
+		changedSecuritySettings = true
+	}
+
+	if data.AllowMembersToManageLabels.String() != state.AllowMembersToManageLabels.String() {
+		securitySettings.LabelManagement = toTeamRoleType(data.AllowMembersToManageLabels.ValueBool())
+		changedSecuritySettings = true
+	}
+
+	if data.AllowMembersToManageTemplates.String() != state.AllowMembersToManageTemplates.String() {
+		securitySettings.TemplateManagement = toTeamRoleType(data.AllowMembersToManageTemplates.ValueBool())
+		changedSecuritySettings = true
+	}
+
+	if changedSecuritySettings {
+		input.SecuritySettings = &securitySettings
 	}
 
 	if data.Key.ValueString() != state.Key.ValueString() {
@@ -1162,10 +1211,10 @@ func update(ctx context.Context, client *graphql.Client, state TeamResourceModel
 	data.AutoArchivePeriod = types.Float64Value(team.AutoArchivePeriod)
 	data.AutoCloseParentIssues = types.BoolValue(team.AutoCloseParentIssues)
 	data.AutoCloseChildIssues = types.BoolValue(team.AutoCloseChildIssues)
-	data.AllowMembersToManageTeam = types.BoolValue(fromTeamRoleType(team.SecuritySettings, "teamManagement"))
-	data.AllowMembersToManageMembers = types.BoolValue(fromTeamRoleType(team.SecuritySettings, "memberManagement"))
-	data.AllowMembersToManageLabels = types.BoolValue(fromTeamRoleType(team.SecuritySettings, "labelManagement"))
-	data.AllowMembersToManageTemplates = types.BoolValue(fromTeamRoleType(team.SecuritySettings, "templateManagement"))
+	data.AllowMembersToManageTeam = types.BoolPointerValue(fromTeamRoleType(team.SecuritySettings, "teamManagement"))
+	data.AllowMembersToManageMembers = types.BoolPointerValue(fromTeamRoleType(team.SecuritySettings, "memberManagement"))
+	data.AllowMembersToManageLabels = types.BoolPointerValue(fromTeamRoleType(team.SecuritySettings, "labelManagement"))
+	data.AllowMembersToManageTemplates = types.BoolPointerValue(fromTeamRoleType(team.SecuritySettings, "templateManagement"))
 
 	if team.Parent != nil {
 		data.ParentId = types.StringValue(team.Parent.Id)
@@ -1323,18 +1372,19 @@ func toTeamRoleType(allow bool) TeamRoleType {
 	return TeamRoleTypeOwner
 }
 
-func fromTeamRoleType(settings map[string]interface{}, key string) bool {
+func fromTeamRoleType(settings map[string]interface{}, key string) *bool {
 	value, ok := settings[key]
 
 	if !ok {
-		return true
+		return nil
 	}
 
 	s, ok := value.(string)
 
 	if !ok {
-		return true
+		return nil
 	}
 
-	return s == string(TeamRoleTypeMember)
+	result := s == string(TeamRoleTypeMember)
+	return &result
 }

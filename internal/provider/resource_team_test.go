@@ -32,10 +32,10 @@ func TestAccTeamResourceDefault(t *testing.T) {
 					resource.TestCheckResourceAttr("linear_team.test", "auto_close_period", "6"),
 					resource.TestCheckResourceAttr("linear_team.test", "auto_close_parent_issues", "false"),
 					resource.TestCheckResourceAttr("linear_team.test", "auto_close_child_issues", "false"),
-					resource.TestCheckResourceAttr("linear_team.test", "allow_members_to_manage_team", "true"),
-					resource.TestCheckResourceAttr("linear_team.test", "allow_members_to_manage_members", "true"),
-					resource.TestCheckResourceAttr("linear_team.test", "allow_members_to_manage_labels", "true"),
-					resource.TestCheckResourceAttr("linear_team.test", "allow_members_to_manage_templates", "true"),
+					resource.TestCheckNoResourceAttr("linear_team.test", "allow_members_to_manage_team"),
+					resource.TestCheckNoResourceAttr("linear_team.test", "allow_members_to_manage_members"),
+					resource.TestCheckNoResourceAttr("linear_team.test", "allow_members_to_manage_labels"),
+					resource.TestCheckNoResourceAttr("linear_team.test", "allow_members_to_manage_templates"),
 					resource.TestCheckResourceAttr("linear_team.test", "triage.enabled", "false"),
 					resource.TestCheckResourceAttr("linear_team.test", "triage.require_priority", "false"),
 					resource.TestCheckResourceAttr("linear_team.test", "cycles.enabled", "false"),
@@ -104,10 +104,10 @@ func TestAccTeamResourceDefault(t *testing.T) {
 					resource.TestCheckResourceAttr("linear_team.test", "auto_close_period", "6"),
 					resource.TestCheckResourceAttr("linear_team.test", "auto_close_parent_issues", "false"),
 					resource.TestCheckResourceAttr("linear_team.test", "auto_close_child_issues", "false"),
-					resource.TestCheckResourceAttr("linear_team.test", "allow_members_to_manage_team", "true"),
-					resource.TestCheckResourceAttr("linear_team.test", "allow_members_to_manage_members", "true"),
-					resource.TestCheckResourceAttr("linear_team.test", "allow_members_to_manage_labels", "true"),
-					resource.TestCheckResourceAttr("linear_team.test", "allow_members_to_manage_templates", "true"),
+					resource.TestCheckNoResourceAttr("linear_team.test", "allow_members_to_manage_team"),
+					resource.TestCheckNoResourceAttr("linear_team.test", "allow_members_to_manage_members"),
+					resource.TestCheckNoResourceAttr("linear_team.test", "allow_members_to_manage_labels"),
+					resource.TestCheckNoResourceAttr("linear_team.test", "allow_members_to_manage_templates"),
 					resource.TestCheckResourceAttr("linear_team.test", "triage.enabled", "false"),
 					resource.TestCheckResourceAttr("linear_team.test", "triage.require_priority", "false"),
 					resource.TestCheckResourceAttr("linear_team.test", "cycles.enabled", "false"),
@@ -171,8 +171,8 @@ func TestAccTeamResourceDefault(t *testing.T) {
 					resource.TestCheckResourceAttr("linear_team.test", "auto_close_child_issues", "true"),
 					resource.TestCheckResourceAttr("linear_team.test", "allow_members_to_manage_team", "false"),
 					resource.TestCheckResourceAttr("linear_team.test", "allow_members_to_manage_members", "false"),
-					resource.TestCheckResourceAttr("linear_team.test", "allow_members_to_manage_labels", "false"),
-					resource.TestCheckResourceAttr("linear_team.test", "allow_members_to_manage_templates", "false"),
+					resource.TestCheckResourceAttr("linear_team.test", "allow_members_to_manage_labels", "true"),
+					resource.TestCheckResourceAttr("linear_team.test", "allow_members_to_manage_templates", "true"),
 					resource.TestCheckResourceAttr("linear_team.test", "triage.enabled", "true"),
 					resource.TestCheckResourceAttr("linear_team.test", "triage.require_priority", "true"),
 					resource.TestCheckResourceAttr("linear_team.test", "cycles.enabled", "true"),
@@ -253,8 +253,8 @@ func TestAccTeamResourceNonDefault(t *testing.T) {
 					resource.TestCheckResourceAttr("linear_team.test", "auto_close_child_issues", "true"),
 					resource.TestCheckResourceAttr("linear_team.test", "allow_members_to_manage_team", "false"),
 					resource.TestCheckResourceAttr("linear_team.test", "allow_members_to_manage_members", "false"),
-					resource.TestCheckResourceAttr("linear_team.test", "allow_members_to_manage_labels", "false"),
-					resource.TestCheckResourceAttr("linear_team.test", "allow_members_to_manage_templates", "false"),
+					resource.TestCheckResourceAttr("linear_team.test", "allow_members_to_manage_labels", "true"),
+					resource.TestCheckResourceAttr("linear_team.test", "allow_members_to_manage_templates", "true"),
 					resource.TestCheckResourceAttr("linear_team.test", "triage.enabled", "true"),
 					resource.TestCheckResourceAttr("linear_team.test", "triage.require_priority", "true"),
 					resource.TestCheckResourceAttr("linear_team.test", "cycles.enabled", "true"),
@@ -325,8 +325,8 @@ func TestAccTeamResourceNonDefault(t *testing.T) {
 					resource.TestCheckResourceAttr("linear_team.test", "auto_close_child_issues", "true"),
 					resource.TestCheckResourceAttr("linear_team.test", "allow_members_to_manage_team", "false"),
 					resource.TestCheckResourceAttr("linear_team.test", "allow_members_to_manage_members", "false"),
-					resource.TestCheckResourceAttr("linear_team.test", "allow_members_to_manage_labels", "false"),
-					resource.TestCheckResourceAttr("linear_team.test", "allow_members_to_manage_templates", "false"),
+					resource.TestCheckResourceAttr("linear_team.test", "allow_members_to_manage_labels", "true"),
+					resource.TestCheckResourceAttr("linear_team.test", "allow_members_to_manage_templates", "true"),
 					resource.TestCheckResourceAttr("linear_team.test", "triage.enabled", "true"),
 					resource.TestCheckResourceAttr("linear_team.test", "triage.require_priority", "true"),
 					resource.TestCheckResourceAttr("linear_team.test", "cycles.enabled", "true"),
@@ -388,8 +388,8 @@ func TestAccTeamResourceNonDefault(t *testing.T) {
 					resource.TestCheckResourceAttr("linear_team.test", "auto_archive_period", "6"),
 					resource.TestCheckResourceAttr("linear_team.test", "auto_close_parent_issues", "false"),
 					resource.TestCheckResourceAttr("linear_team.test", "auto_close_child_issues", "false"),
-					resource.TestCheckResourceAttr("linear_team.test", "allow_members_to_manage_team", "true"),
-					resource.TestCheckResourceAttr("linear_team.test", "allow_members_to_manage_members", "true"),
+					resource.TestCheckResourceAttr("linear_team.test", "allow_members_to_manage_team", "false"),
+					resource.TestCheckResourceAttr("linear_team.test", "allow_members_to_manage_members", "false"),
 					resource.TestCheckResourceAttr("linear_team.test", "allow_members_to_manage_labels", "true"),
 					resource.TestCheckResourceAttr("linear_team.test", "allow_members_to_manage_templates", "true"),
 					resource.TestCheckResourceAttr("linear_team.test", "triage.enabled", "false"),
@@ -474,8 +474,8 @@ resource "linear_team" "test" {
   auto_close_child_issues = true
   allow_members_to_manage_team = false
   allow_members_to_manage_members = false
-  allow_members_to_manage_labels = false
-  allow_members_to_manage_templates = false
+  allow_members_to_manage_labels = true
+  allow_members_to_manage_templates = true
 
   triage = {
     enabled          = true

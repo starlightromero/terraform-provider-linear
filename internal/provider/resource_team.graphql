@@ -98,6 +98,7 @@ mutation createTeam(
 # @genqlient(for: "TeamUpdateInput.issueSharingEnabled", omitempty: true)
 # @genqlient(for: "TeamUpdateInput.inheritSlackAutoCreateProjectChannel", omitempty: true)
 # @genqlient(for: "TeamUpdateInput.slackAutoCreateProjectChannel", omitempty: true)
+# @genqlient(for: "TeamUpdateInput.securitySettings", pointer: true, omitempty: true)
 # @genqlient(for: "TeamUpdateInput.allMembersCanJoin", omitempty: true)
 # @genqlient(for: "TeamUpdateInput.retiredAt", pointer: true, omitempty: true)
 # @genqlient(for: "TeamUpdateInput.handleSubTeamsOnRetirement", omitempty: true)
