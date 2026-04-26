@@ -42,6 +42,7 @@ query findWorkspaceLabel($name: String!) {
 # @genqlient(for: "IssueLabelCreateInput.color", omitempty: true, pointer: true)
 # @genqlient(for: "IssueLabelCreateInput.parentId", pointer: true)
 # @genqlient(for: "IssueLabelCreateInput.teamId", pointer: true)
+# @genqlient(for: "IssueLabelCreateInput.retiredAt", pointer: true)
 mutation createLabel(
   $input: IssueLabelCreateInput!
 ) {
@@ -56,6 +57,7 @@ mutation createLabel(
 # @genqlient(for: "IssueLabelUpdateInput.description", pointer: true)
 # @genqlient(for: "IssueLabelUpdateInput.color", omitempty: true, pointer: true)
 # @genqlient(for: "IssueLabelUpdateInput.parentId", pointer: true)
+# @genqlient(for: "IssueLabelUpdateInput.retiredAt", pointer: true)
 mutation updateLabel(
   $input: IssueLabelUpdateInput!,
   $id: String!

@@ -183,7 +183,7 @@ type IssueLabelCreateInput struct {
 	// Whether the label is a group.
 	IsGroup bool `json:"isGroup"`
 	// The time at which the label was retired. Set to null to restore a retired label.
-	RetiredAt time.Time `json:"retiredAt"`
+	RetiredAt *time.Time `json:"retiredAt"`
 }
 
 // GetId returns IssueLabelCreateInput.Id, and is useful for accessing the field via an interface.
@@ -208,7 +208,7 @@ func (v *IssueLabelCreateInput) GetTeamId() *string { return v.TeamId }
 func (v *IssueLabelCreateInput) GetIsGroup() bool { return v.IsGroup }
 
 // GetRetiredAt returns IssueLabelCreateInput.RetiredAt, and is useful for accessing the field via an interface.
-func (v *IssueLabelCreateInput) GetRetiredAt() time.Time { return v.RetiredAt }
+func (v *IssueLabelCreateInput) GetRetiredAt() *time.Time { return v.RetiredAt }
 
 // IssueLabelParentIssueLabel includes the requested fields of the GraphQL type IssueLabel.
 // The GraphQL type's documentation follows.
@@ -254,7 +254,7 @@ type IssueLabelUpdateInput struct {
 	// Whether the label is a group.
 	IsGroup bool `json:"isGroup"`
 	// The time at which the label was retired. Set to null to restore a retired label.
-	RetiredAt time.Time `json:"retiredAt"`
+	RetiredAt *time.Time `json:"retiredAt"`
 }
 
 // GetName returns IssueLabelUpdateInput.Name, and is useful for accessing the field via an interface.
@@ -273,7 +273,7 @@ func (v *IssueLabelUpdateInput) GetColor() *string { return v.Color }
 func (v *IssueLabelUpdateInput) GetIsGroup() bool { return v.IsGroup }
 
 // GetRetiredAt returns IssueLabelUpdateInput.RetiredAt, and is useful for accessing the field via an interface.
-func (v *IssueLabelUpdateInput) GetRetiredAt() time.Time { return v.RetiredAt }
+func (v *IssueLabelUpdateInput) GetRetiredAt() *time.Time { return v.RetiredAt }
 
 // Organization includes the GraphQL fields of Organization requested by the fragment Organization.
 // The GraphQL type's documentation follows.

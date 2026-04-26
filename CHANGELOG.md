@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.7
+
+### Bug Fixes
+* Fix issue with created/updated labels being marked as archived
+
 ## 0.3.6
 
 ### Enhancements
