@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.6
+
+### Enhancements
+* Added `is_group` to `linear_team_label` and `linear_workspace_label`
+
 ## 0.3.5
 
 ### Bug Fixes

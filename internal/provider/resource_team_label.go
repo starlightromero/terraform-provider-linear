@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
@@ -33,6 +34,7 @@ type TeamLabelResourceModel struct {
 	Name        types.String `tfsdk:"name"`
 	Description types.String `tfsdk:"description"`
 	Color       types.String `tfsdk:"color"`
+	IsGroup     types.Bool   `tfsdk:"is_group"`
 	ParentId    types.String `tfsdk:"parent_id"`
 	TeamId      types.String `tfsdk:"team_id"`
 }
@@ -73,6 +75,12 @@ func (r *TeamLabelResource) Schema(ctx context.Context, req resource.SchemaReque
 				Validators: []validator.String{
 					stringvalidator.RegexMatches(colorRegex(), "must be a hex color"),
 				},
+			},
+			"is_group": schema.BoolAttribute{
+				MarkdownDescription: "Whether the label is a group (parent) label.",
+				Optional:            true,
+				Computed:            true,
+				Default:             booldefault.StaticBool(false),
 			},
 			"parent_id": schema.StringAttribute{
 				MarkdownDescription: "Parent (label group) of the label.",
@@ -127,6 +135,7 @@ func (r *TeamLabelResource) Create(ctx context.Context, req resource.CreateReque
 	input := IssueLabelCreateInput{
 		Name:        data.Name.ValueString(),
 		Description: data.Description.ValueStringPointer(),
+		IsGroup:     data.IsGroup.ValueBool(),
 		ParentId:    data.ParentId.ValueStringPointer(),
 		TeamId:      data.TeamId.ValueStringPointer(),
 	}
@@ -151,6 +160,7 @@ func (r *TeamLabelResource) Create(ctx context.Context, req resource.CreateReque
 	data.Name = types.StringValue(issueLabel.Name)
 	data.Description = types.StringPointerValue(issueLabel.Description)
 	data.Color = types.StringPointerValue(issueLabel.Color)
+	data.IsGroup = types.BoolValue(issueLabel.IsGroup)
 
 	if issueLabel.Parent != nil {
 		data.ParentId = types.StringValue(issueLabel.Parent.Id)
@@ -185,6 +195,7 @@ func (r *TeamLabelResource) Read(ctx context.Context, req resource.ReadRequest, 
 	data.Name = types.StringValue(issueLabel.Name)
 	data.Description = types.StringPointerValue(issueLabel.Description)
 	data.Color = types.StringPointerValue(issueLabel.Color)
+	data.IsGroup = types.BoolValue(issueLabel.IsGroup)
 
 	if issueLabel.Parent != nil {
 		data.ParentId = types.StringValue(issueLabel.Parent.Id)
@@ -209,6 +220,7 @@ func (r *TeamLabelResource) Update(ctx context.Context, req resource.UpdateReque
 	input := IssueLabelUpdateInput{
 		Name:        data.Name.ValueString(),
 		Description: data.Description.ValueStringPointer(),
+		IsGroup:     data.IsGroup.ValueBool(),
 		ParentId:    data.ParentId.ValueStringPointer(),
 	}
 
@@ -232,6 +244,7 @@ func (r *TeamLabelResource) Update(ctx context.Context, req resource.UpdateReque
 	data.Name = types.StringValue(issueLabel.Name)
 	data.Description = types.StringPointerValue(issueLabel.Description)
 	data.Color = types.StringPointerValue(issueLabel.Color)
+	data.IsGroup = types.BoolValue(issueLabel.IsGroup)
 
 	if issueLabel.Parent != nil {
 		data.ParentId = types.StringValue(issueLabel.Parent.Id)

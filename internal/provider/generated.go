@@ -133,6 +133,10 @@ type IssueLabel struct {
 	Description *string `json:"description"`
 	// The label's color as a HEX string (e.g., '#EB5757'). Used for visual identification of the label in the UI.
 	Color *string `json:"color"`
+	// Whether the label is a group. When true, this label acts as a container for
+	// child labels and cannot be directly applied to issues or projects. When false,
+	// the label can be directly applied.
+	IsGroup bool `json:"isGroup"`
 	// The parent label.
 	Parent *IssueLabelParentIssueLabel `json:"parent"`
 	// The team that the label is scoped to. If null, the label is a workspace-level
@@ -151,6 +155,9 @@ func (v *IssueLabel) GetDescription() *string { return v.Description }
 
 // GetColor returns IssueLabel.Color, and is useful for accessing the field via an interface.
 func (v *IssueLabel) GetColor() *string { return v.Color }
+
+// GetIsGroup returns IssueLabel.IsGroup, and is useful for accessing the field via an interface.
+func (v *IssueLabel) GetIsGroup() bool { return v.IsGroup }
 
 // GetParent returns IssueLabel.Parent, and is useful for accessing the field via an interface.
 func (v *IssueLabel) GetParent() *IssueLabelParentIssueLabel { return v.Parent }
@@ -2397,6 +2404,11 @@ func (v *createLabelIssueLabelCreateIssueLabelPayloadIssueLabel) GetColor() *str
 	return v.IssueLabel.Color
 }
 
+// GetIsGroup returns createLabelIssueLabelCreateIssueLabelPayloadIssueLabel.IsGroup, and is useful for accessing the field via an interface.
+func (v *createLabelIssueLabelCreateIssueLabelPayloadIssueLabel) GetIsGroup() bool {
+	return v.IssueLabel.IsGroup
+}
+
 // GetParent returns createLabelIssueLabelCreateIssueLabelPayloadIssueLabel.Parent, and is useful for accessing the field via an interface.
 func (v *createLabelIssueLabelCreateIssueLabelPayloadIssueLabel) GetParent() *IssueLabelParentIssueLabel {
 	return v.IssueLabel.Parent
@@ -2441,6 +2453,8 @@ type __premarshalcreateLabelIssueLabelCreateIssueLabelPayloadIssueLabel struct {
 
 	Color *string `json:"color"`
 
+	IsGroup bool `json:"isGroup"`
+
 	Parent *IssueLabelParentIssueLabel `json:"parent"`
 
 	Team *IssueLabelTeam `json:"team"`
@@ -2461,6 +2475,7 @@ func (v *createLabelIssueLabelCreateIssueLabelPayloadIssueLabel) __premarshalJSO
 	retval.Name = v.IssueLabel.Name
 	retval.Description = v.IssueLabel.Description
 	retval.Color = v.IssueLabel.Color
+	retval.IsGroup = v.IssueLabel.IsGroup
 	retval.Parent = v.IssueLabel.Parent
 	retval.Team = v.IssueLabel.Team
 	return &retval, nil
@@ -3200,6 +3215,9 @@ func (v *getLabelIssueLabel) GetDescription() *string { return v.IssueLabel.Desc
 // GetColor returns getLabelIssueLabel.Color, and is useful for accessing the field via an interface.
 func (v *getLabelIssueLabel) GetColor() *string { return v.IssueLabel.Color }
 
+// GetIsGroup returns getLabelIssueLabel.IsGroup, and is useful for accessing the field via an interface.
+func (v *getLabelIssueLabel) GetIsGroup() bool { return v.IssueLabel.IsGroup }
+
 // GetParent returns getLabelIssueLabel.Parent, and is useful for accessing the field via an interface.
 func (v *getLabelIssueLabel) GetParent() *IssueLabelParentIssueLabel { return v.IssueLabel.Parent }
 
@@ -3240,6 +3258,8 @@ type __premarshalgetLabelIssueLabel struct {
 
 	Color *string `json:"color"`
 
+	IsGroup bool `json:"isGroup"`
+
 	Parent *IssueLabelParentIssueLabel `json:"parent"`
 
 	Team *IssueLabelTeam `json:"team"`
@@ -3260,6 +3280,7 @@ func (v *getLabelIssueLabel) __premarshalJSON() (*__premarshalgetLabelIssueLabel
 	retval.Name = v.IssueLabel.Name
 	retval.Description = v.IssueLabel.Description
 	retval.Color = v.IssueLabel.Color
+	retval.IsGroup = v.IssueLabel.IsGroup
 	retval.Parent = v.IssueLabel.Parent
 	retval.Team = v.IssueLabel.Team
 	return &retval, nil
@@ -4545,6 +4566,11 @@ func (v *updateLabelIssueLabelUpdateIssueLabelPayloadIssueLabel) GetColor() *str
 	return v.IssueLabel.Color
 }
 
+// GetIsGroup returns updateLabelIssueLabelUpdateIssueLabelPayloadIssueLabel.IsGroup, and is useful for accessing the field via an interface.
+func (v *updateLabelIssueLabelUpdateIssueLabelPayloadIssueLabel) GetIsGroup() bool {
+	return v.IssueLabel.IsGroup
+}
+
 // GetParent returns updateLabelIssueLabelUpdateIssueLabelPayloadIssueLabel.Parent, and is useful for accessing the field via an interface.
 func (v *updateLabelIssueLabelUpdateIssueLabelPayloadIssueLabel) GetParent() *IssueLabelParentIssueLabel {
 	return v.IssueLabel.Parent
@@ -4589,6 +4615,8 @@ type __premarshalupdateLabelIssueLabelUpdateIssueLabelPayloadIssueLabel struct {
 
 	Color *string `json:"color"`
 
+	IsGroup bool `json:"isGroup"`
+
 	Parent *IssueLabelParentIssueLabel `json:"parent"`
 
 	Team *IssueLabelTeam `json:"team"`
@@ -4609,6 +4637,7 @@ func (v *updateLabelIssueLabelUpdateIssueLabelPayloadIssueLabel) __premarshalJSO
 	retval.Name = v.IssueLabel.Name
 	retval.Description = v.IssueLabel.Description
 	retval.Color = v.IssueLabel.Color
+	retval.IsGroup = v.IssueLabel.IsGroup
 	retval.Parent = v.IssueLabel.Parent
 	retval.Team = v.IssueLabel.Team
 	return &retval, nil
@@ -5346,6 +5375,7 @@ fragment IssueLabel on IssueLabel {
 	name
 	description
 	color
+	isGroup
 	parent {
 		id
 	}
@@ -5773,6 +5803,7 @@ fragment IssueLabel on IssueLabel {
 	name
 	description
 	color
+	isGroup
 	parent {
 		id
 	}
@@ -6304,6 +6335,7 @@ fragment IssueLabel on IssueLabel {
 	name
 	description
 	color
+	isGroup
 	parent {
 		id
 	}

@@ -31,6 +31,7 @@ resource "linear_team_label" "example" {
 
 - `color` (String) Color of the label.
 - `description` (String) Description of the label.
+- `is_group` (Boolean) Whether the label is a group (parent) label.
 - `parent_id` (String) Parent (label group) of the label.
 
 ### Read-Only
