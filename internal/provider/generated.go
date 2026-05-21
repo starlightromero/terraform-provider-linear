@@ -1229,6 +1229,49 @@ func (v *TeamCreateInput) GetSlackAutoCreateProjectChannel() bool {
 	return v.SlackAutoCreateProjectChannel
 }
 
+// Input for creating a new team membership.
+type TeamMembershipCreateInput struct {
+	// The identifier in UUID v4 format. If none is provided, the backend will generate one.
+	Id string `json:"id"`
+	// The identifier of the user associated with the membership.
+	UserId string `json:"userId"`
+	// The identifier of the team associated with the membership.
+	TeamId string `json:"teamId"`
+	// Internal. Whether the user is the owner of the team.
+	Owner bool `json:"owner"`
+	// The position of the item in the users list.
+	SortOrder float64 `json:"sortOrder"`
+}
+
+// GetId returns TeamMembershipCreateInput.Id, and is useful for accessing the field via an interface.
+func (v *TeamMembershipCreateInput) GetId() string { return v.Id }
+
+// GetUserId returns TeamMembershipCreateInput.UserId, and is useful for accessing the field via an interface.
+func (v *TeamMembershipCreateInput) GetUserId() string { return v.UserId }
+
+// GetTeamId returns TeamMembershipCreateInput.TeamId, and is useful for accessing the field via an interface.
+func (v *TeamMembershipCreateInput) GetTeamId() string { return v.TeamId }
+
+// GetOwner returns TeamMembershipCreateInput.Owner, and is useful for accessing the field via an interface.
+func (v *TeamMembershipCreateInput) GetOwner() bool { return v.Owner }
+
+// GetSortOrder returns TeamMembershipCreateInput.SortOrder, and is useful for accessing the field via an interface.
+func (v *TeamMembershipCreateInput) GetSortOrder() float64 { return v.SortOrder }
+
+// Input for updating an existing team membership.
+type TeamMembershipUpdateInput struct {
+	// Internal. Whether the user is the owner of the team.
+	Owner bool `json:"owner"`
+	// The position of the item in the users list.
+	SortOrder float64 `json:"sortOrder"`
+}
+
+// GetOwner returns TeamMembershipUpdateInput.Owner, and is useful for accessing the field via an interface.
+func (v *TeamMembershipUpdateInput) GetOwner() bool { return v.Owner }
+
+// GetSortOrder returns TeamMembershipUpdateInput.SortOrder, and is useful for accessing the field via an interface.
+func (v *TeamMembershipUpdateInput) GetSortOrder() float64 { return v.SortOrder }
+
 // TeamParentTeam includes the requested fields of the GraphQL type Team.
 // The GraphQL type's documentation follows.
 //
@@ -2053,6 +2096,14 @@ type __createTeamInput struct {
 // GetInput returns __createTeamInput.Input, and is useful for accessing the field via an interface.
 func (v *__createTeamInput) GetInput() TeamCreateInput { return v.Input }
 
+// __createTeamMembershipInput is used internally by genqlient
+type __createTeamMembershipInput struct {
+	Input TeamMembershipCreateInput `json:"input"`
+}
+
+// GetInput returns __createTeamMembershipInput.Input, and is useful for accessing the field via an interface.
+func (v *__createTeamMembershipInput) GetInput() TeamMembershipCreateInput { return v.Input }
+
 // __createWorkflowStateInput is used internally by genqlient
 type __createWorkflowStateInput struct {
 	Input WorkflowStateCreateInput `json:"input"`
@@ -2092,6 +2143,14 @@ type __deleteTeamInput struct {
 
 // GetKey returns __deleteTeamInput.Key, and is useful for accessing the field via an interface.
 func (v *__deleteTeamInput) GetKey() string { return v.Key }
+
+// __deleteTeamMembershipInput is used internally by genqlient
+type __deleteTeamMembershipInput struct {
+	Id string `json:"id"`
+}
+
+// GetId returns __deleteTeamMembershipInput.Id, and is useful for accessing the field via an interface.
+func (v *__deleteTeamMembershipInput) GetId() string { return v.Id }
 
 // __deleteWorkflowStateInput is used internally by genqlient
 type __deleteWorkflowStateInput struct {
@@ -2148,6 +2207,14 @@ type __getTeamInput struct {
 
 // GetKey returns __getTeamInput.Key, and is useful for accessing the field via an interface.
 func (v *__getTeamInput) GetKey() string { return v.Key }
+
+// __getTeamMembershipInput is used internally by genqlient
+type __getTeamMembershipInput struct {
+	Id string `json:"id"`
+}
+
+// GetId returns __getTeamMembershipInput.Id, and is useful for accessing the field via an interface.
+func (v *__getTeamMembershipInput) GetId() string { return v.Id }
 
 // __getTeamWorkflowInput is used internally by genqlient
 type __getTeamWorkflowInput struct {
@@ -2244,6 +2311,18 @@ func (v *__updateTeamInput) GetInput() TeamUpdateInput { return v.Input }
 
 // GetId returns __updateTeamInput.Id, and is useful for accessing the field via an interface.
 func (v *__updateTeamInput) GetId() string { return v.Id }
+
+// __updateTeamMembershipInput is used internally by genqlient
+type __updateTeamMembershipInput struct {
+	Input TeamMembershipUpdateInput `json:"input"`
+	Id    string                    `json:"id"`
+}
+
+// GetInput returns __updateTeamMembershipInput.Input, and is useful for accessing the field via an interface.
+func (v *__updateTeamMembershipInput) GetInput() TeamMembershipUpdateInput { return v.Input }
+
+// GetId returns __updateTeamMembershipInput.Id, and is useful for accessing the field via an interface.
+func (v *__updateTeamMembershipInput) GetId() string { return v.Id }
 
 // __updateWorkflowStateInput is used internally by genqlient
 type __updateWorkflowStateInput struct {
@@ -2490,6 +2569,106 @@ type createLabelResponse struct {
 // GetIssueLabelCreate returns createLabelResponse.IssueLabelCreate, and is useful for accessing the field via an interface.
 func (v *createLabelResponse) GetIssueLabelCreate() createLabelIssueLabelCreateIssueLabelPayload {
 	return v.IssueLabelCreate
+}
+
+// createTeamMembershipResponse is returned by createTeamMembership on success.
+type createTeamMembershipResponse struct {
+	// Creates a new team membership, adding a user to a team. Validates that the
+	// user is not already a member, the team is not archived or retired, and the
+	// requesting user has permission to add members.
+	TeamMembershipCreate createTeamMembershipTeamMembershipCreateTeamMembershipPayload `json:"teamMembershipCreate"`
+}
+
+// GetTeamMembershipCreate returns createTeamMembershipResponse.TeamMembershipCreate, and is useful for accessing the field via an interface.
+func (v *createTeamMembershipResponse) GetTeamMembershipCreate() createTeamMembershipTeamMembershipCreateTeamMembershipPayload {
+	return v.TeamMembershipCreate
+}
+
+// createTeamMembershipTeamMembershipCreateTeamMembershipPayload includes the requested fields of the GraphQL type TeamMembershipPayload.
+// The GraphQL type's documentation follows.
+//
+// Team membership operation response.
+type createTeamMembershipTeamMembershipCreateTeamMembershipPayload struct {
+	// The team membership that was created or updated.
+	TeamMembership createTeamMembershipTeamMembershipCreateTeamMembershipPayloadTeamMembership `json:"teamMembership"`
+}
+
+// GetTeamMembership returns createTeamMembershipTeamMembershipCreateTeamMembershipPayload.TeamMembership, and is useful for accessing the field via an interface.
+func (v *createTeamMembershipTeamMembershipCreateTeamMembershipPayload) GetTeamMembership() createTeamMembershipTeamMembershipCreateTeamMembershipPayloadTeamMembership {
+	return v.TeamMembership
+}
+
+// createTeamMembershipTeamMembershipCreateTeamMembershipPayloadTeamMembership includes the requested fields of the GraphQL type TeamMembership.
+// The GraphQL type's documentation follows.
+//
+// A join entity that defines a user's membership in a team. Each membership record
+// links a user to a team and tracks whether the user is a team owner. Users can be
+// members of multiple teams, and their memberships determine which teams' issues
+// and resources they can access.
+type createTeamMembershipTeamMembershipCreateTeamMembershipPayloadTeamMembership struct {
+	// The unique identifier of the entity.
+	Id string `json:"id"`
+	// Whether the user is an owner of the team. Team owners have elevated
+	// permissions for managing team settings, members, and resources.
+	Owner bool `json:"owner"`
+	// The team that the membership is associated with.
+	Team createTeamMembershipTeamMembershipCreateTeamMembershipPayloadTeamMembershipTeam `json:"team"`
+	// The user that the membership is associated with.
+	User createTeamMembershipTeamMembershipCreateTeamMembershipPayloadTeamMembershipUser `json:"user"`
+}
+
+// GetId returns createTeamMembershipTeamMembershipCreateTeamMembershipPayloadTeamMembership.Id, and is useful for accessing the field via an interface.
+func (v *createTeamMembershipTeamMembershipCreateTeamMembershipPayloadTeamMembership) GetId() string {
+	return v.Id
+}
+
+// GetOwner returns createTeamMembershipTeamMembershipCreateTeamMembershipPayloadTeamMembership.Owner, and is useful for accessing the field via an interface.
+func (v *createTeamMembershipTeamMembershipCreateTeamMembershipPayloadTeamMembership) GetOwner() bool {
+	return v.Owner
+}
+
+// GetTeam returns createTeamMembershipTeamMembershipCreateTeamMembershipPayloadTeamMembership.Team, and is useful for accessing the field via an interface.
+func (v *createTeamMembershipTeamMembershipCreateTeamMembershipPayloadTeamMembership) GetTeam() createTeamMembershipTeamMembershipCreateTeamMembershipPayloadTeamMembershipTeam {
+	return v.Team
+}
+
+// GetUser returns createTeamMembershipTeamMembershipCreateTeamMembershipPayloadTeamMembership.User, and is useful for accessing the field via an interface.
+func (v *createTeamMembershipTeamMembershipCreateTeamMembershipPayloadTeamMembership) GetUser() createTeamMembershipTeamMembershipCreateTeamMembershipPayloadTeamMembershipUser {
+	return v.User
+}
+
+// createTeamMembershipTeamMembershipCreateTeamMembershipPayloadTeamMembershipTeam includes the requested fields of the GraphQL type Team.
+// The GraphQL type's documentation follows.
+//
+// A team is the primary organizational unit in Linear. Issues belong to teams, and
+// each team has its own workflow states, cycles, labels, and settings. Teams can
+// be public (visible to all workspace members) or private (visible only to team
+// members). Teams can also have sub-teams that inherit settings from their parent.
+type createTeamMembershipTeamMembershipCreateTeamMembershipPayloadTeamMembershipTeam struct {
+	// The unique identifier of the entity.
+	Id string `json:"id"`
+}
+
+// GetId returns createTeamMembershipTeamMembershipCreateTeamMembershipPayloadTeamMembershipTeam.Id, and is useful for accessing the field via an interface.
+func (v *createTeamMembershipTeamMembershipCreateTeamMembershipPayloadTeamMembershipTeam) GetId() string {
+	return v.Id
+}
+
+// createTeamMembershipTeamMembershipCreateTeamMembershipPayloadTeamMembershipUser includes the requested fields of the GraphQL type User.
+// The GraphQL type's documentation follows.
+//
+// A user that belongs to a workspace. Users can have different roles (admin,
+// member, guest, or app) that determine their level of access. Users can be
+// members of multiple teams, and can be active or deactivated. Guest users have
+// limited access scoped to specific teams they are invited to.
+type createTeamMembershipTeamMembershipCreateTeamMembershipPayloadTeamMembershipUser struct {
+	// The unique identifier of the entity.
+	Id string `json:"id"`
+}
+
+// GetId returns createTeamMembershipTeamMembershipCreateTeamMembershipPayloadTeamMembershipUser.Id, and is useful for accessing the field via an interface.
+func (v *createTeamMembershipTeamMembershipCreateTeamMembershipPayloadTeamMembershipUser) GetId() string {
+	return v.Id
 }
 
 // createTeamResponse is returned by createTeam on success.
@@ -3000,6 +3179,30 @@ func (v *deleteLabelResponse) GetIssueLabelDelete() deleteLabelIssueLabelDeleteD
 	return v.IssueLabelDelete
 }
 
+// deleteTeamMembershipResponse is returned by deleteTeamMembership on success.
+type deleteTeamMembershipResponse struct {
+	// Deletes a team membership, removing the user from the team. Users can remove
+	// their own membership, or team owners and workspace admins can remove other members.
+	TeamMembershipDelete deleteTeamMembershipTeamMembershipDeleteDeletePayload `json:"teamMembershipDelete"`
+}
+
+// GetTeamMembershipDelete returns deleteTeamMembershipResponse.TeamMembershipDelete, and is useful for accessing the field via an interface.
+func (v *deleteTeamMembershipResponse) GetTeamMembershipDelete() deleteTeamMembershipTeamMembershipDeleteDeletePayload {
+	return v.TeamMembershipDelete
+}
+
+// deleteTeamMembershipTeamMembershipDeleteDeletePayload includes the requested fields of the GraphQL type DeletePayload.
+// The GraphQL type's documentation follows.
+//
+// A generic payload return from entity deletion mutations.
+type deleteTeamMembershipTeamMembershipDeleteDeletePayload struct {
+	// Whether the operation was successful.
+	Success bool `json:"success"`
+}
+
+// GetSuccess returns deleteTeamMembershipTeamMembershipDeleteDeletePayload.Success, and is useful for accessing the field via an interface.
+func (v *deleteTeamMembershipTeamMembershipDeleteDeletePayload) GetSuccess() bool { return v.Success }
+
 // deleteTeamResponse is returned by deleteTeam on success.
 type deleteTeamResponse struct {
 	// Archives a team and schedules its data for deletion. Requires team owner or workspace admin permissions.
@@ -3294,6 +3497,82 @@ type getLabelResponse struct {
 
 // GetIssueLabel returns getLabelResponse.IssueLabel, and is useful for accessing the field via an interface.
 func (v *getLabelResponse) GetIssueLabel() getLabelIssueLabel { return v.IssueLabel }
+
+// getTeamMembershipResponse is returned by getTeamMembership on success.
+type getTeamMembershipResponse struct {
+	// Fetches a specific team membership by its ID.
+	TeamMembership getTeamMembershipTeamMembership `json:"teamMembership"`
+}
+
+// GetTeamMembership returns getTeamMembershipResponse.TeamMembership, and is useful for accessing the field via an interface.
+func (v *getTeamMembershipResponse) GetTeamMembership() getTeamMembershipTeamMembership {
+	return v.TeamMembership
+}
+
+// getTeamMembershipTeamMembership includes the requested fields of the GraphQL type TeamMembership.
+// The GraphQL type's documentation follows.
+//
+// A join entity that defines a user's membership in a team. Each membership record
+// links a user to a team and tracks whether the user is a team owner. Users can be
+// members of multiple teams, and their memberships determine which teams' issues
+// and resources they can access.
+type getTeamMembershipTeamMembership struct {
+	// The unique identifier of the entity.
+	Id string `json:"id"`
+	// Whether the user is an owner of the team. Team owners have elevated
+	// permissions for managing team settings, members, and resources.
+	Owner bool `json:"owner"`
+	// The team that the membership is associated with.
+	Team getTeamMembershipTeamMembershipTeam `json:"team"`
+	// The user that the membership is associated with.
+	User getTeamMembershipTeamMembershipUser `json:"user"`
+}
+
+// GetId returns getTeamMembershipTeamMembership.Id, and is useful for accessing the field via an interface.
+func (v *getTeamMembershipTeamMembership) GetId() string { return v.Id }
+
+// GetOwner returns getTeamMembershipTeamMembership.Owner, and is useful for accessing the field via an interface.
+func (v *getTeamMembershipTeamMembership) GetOwner() bool { return v.Owner }
+
+// GetTeam returns getTeamMembershipTeamMembership.Team, and is useful for accessing the field via an interface.
+func (v *getTeamMembershipTeamMembership) GetTeam() getTeamMembershipTeamMembershipTeam {
+	return v.Team
+}
+
+// GetUser returns getTeamMembershipTeamMembership.User, and is useful for accessing the field via an interface.
+func (v *getTeamMembershipTeamMembership) GetUser() getTeamMembershipTeamMembershipUser {
+	return v.User
+}
+
+// getTeamMembershipTeamMembershipTeam includes the requested fields of the GraphQL type Team.
+// The GraphQL type's documentation follows.
+//
+// A team is the primary organizational unit in Linear. Issues belong to teams, and
+// each team has its own workflow states, cycles, labels, and settings. Teams can
+// be public (visible to all workspace members) or private (visible only to team
+// members). Teams can also have sub-teams that inherit settings from their parent.
+type getTeamMembershipTeamMembershipTeam struct {
+	// The unique identifier of the entity.
+	Id string `json:"id"`
+}
+
+// GetId returns getTeamMembershipTeamMembershipTeam.Id, and is useful for accessing the field via an interface.
+func (v *getTeamMembershipTeamMembershipTeam) GetId() string { return v.Id }
+
+// getTeamMembershipTeamMembershipUser includes the requested fields of the GraphQL type User.
+// The GraphQL type's documentation follows.
+//
+// A user that belongs to a workspace. Users can have different roles (admin,
+// member, guest, or app) that determine their level of access. Users can be
+// members of multiple teams, and can be active or deactivated. Guest users have
+// limited access scoped to specific teams they are invited to.
+type getTeamMembershipTeamMembershipUser struct {
+	// The unique identifier of the entity.
+	Id string `json:"id"`
+}
+
+// GetId returns getTeamMembershipTeamMembershipUser.Id, and is useful for accessing the field via an interface.
+func (v *getTeamMembershipTeamMembershipUser) GetId() string { return v.Id }
 
 // getTeamResponse is returned by getTeam on success.
 type getTeamResponse struct {
@@ -4654,6 +4933,104 @@ func (v *updateLabelResponse) GetIssueLabelUpdate() updateLabelIssueLabelUpdateI
 	return v.IssueLabelUpdate
 }
 
+// updateTeamMembershipResponse is returned by updateTeamMembership on success.
+type updateTeamMembershipResponse struct {
+	// Updates a team membership, such as changing ownership status or sort order.
+	TeamMembershipUpdate updateTeamMembershipTeamMembershipUpdateTeamMembershipPayload `json:"teamMembershipUpdate"`
+}
+
+// GetTeamMembershipUpdate returns updateTeamMembershipResponse.TeamMembershipUpdate, and is useful for accessing the field via an interface.
+func (v *updateTeamMembershipResponse) GetTeamMembershipUpdate() updateTeamMembershipTeamMembershipUpdateTeamMembershipPayload {
+	return v.TeamMembershipUpdate
+}
+
+// updateTeamMembershipTeamMembershipUpdateTeamMembershipPayload includes the requested fields of the GraphQL type TeamMembershipPayload.
+// The GraphQL type's documentation follows.
+//
+// Team membership operation response.
+type updateTeamMembershipTeamMembershipUpdateTeamMembershipPayload struct {
+	// The team membership that was created or updated.
+	TeamMembership updateTeamMembershipTeamMembershipUpdateTeamMembershipPayloadTeamMembership `json:"teamMembership"`
+}
+
+// GetTeamMembership returns updateTeamMembershipTeamMembershipUpdateTeamMembershipPayload.TeamMembership, and is useful for accessing the field via an interface.
+func (v *updateTeamMembershipTeamMembershipUpdateTeamMembershipPayload) GetTeamMembership() updateTeamMembershipTeamMembershipUpdateTeamMembershipPayloadTeamMembership {
+	return v.TeamMembership
+}
+
+// updateTeamMembershipTeamMembershipUpdateTeamMembershipPayloadTeamMembership includes the requested fields of the GraphQL type TeamMembership.
+// The GraphQL type's documentation follows.
+//
+// A join entity that defines a user's membership in a team. Each membership record
+// links a user to a team and tracks whether the user is a team owner. Users can be
+// members of multiple teams, and their memberships determine which teams' issues
+// and resources they can access.
+type updateTeamMembershipTeamMembershipUpdateTeamMembershipPayloadTeamMembership struct {
+	// The unique identifier of the entity.
+	Id string `json:"id"`
+	// Whether the user is an owner of the team. Team owners have elevated
+	// permissions for managing team settings, members, and resources.
+	Owner bool `json:"owner"`
+	// The team that the membership is associated with.
+	Team updateTeamMembershipTeamMembershipUpdateTeamMembershipPayloadTeamMembershipTeam `json:"team"`
+	// The user that the membership is associated with.
+	User updateTeamMembershipTeamMembershipUpdateTeamMembershipPayloadTeamMembershipUser `json:"user"`
+}
+
+// GetId returns updateTeamMembershipTeamMembershipUpdateTeamMembershipPayloadTeamMembership.Id, and is useful for accessing the field via an interface.
+func (v *updateTeamMembershipTeamMembershipUpdateTeamMembershipPayloadTeamMembership) GetId() string {
+	return v.Id
+}
+
+// GetOwner returns updateTeamMembershipTeamMembershipUpdateTeamMembershipPayloadTeamMembership.Owner, and is useful for accessing the field via an interface.
+func (v *updateTeamMembershipTeamMembershipUpdateTeamMembershipPayloadTeamMembership) GetOwner() bool {
+	return v.Owner
+}
+
+// GetTeam returns updateTeamMembershipTeamMembershipUpdateTeamMembershipPayloadTeamMembership.Team, and is useful for accessing the field via an interface.
+func (v *updateTeamMembershipTeamMembershipUpdateTeamMembershipPayloadTeamMembership) GetTeam() updateTeamMembershipTeamMembershipUpdateTeamMembershipPayloadTeamMembershipTeam {
+	return v.Team
+}
+
+// GetUser returns updateTeamMembershipTeamMembershipUpdateTeamMembershipPayloadTeamMembership.User, and is useful for accessing the field via an interface.
+func (v *updateTeamMembershipTeamMembershipUpdateTeamMembershipPayloadTeamMembership) GetUser() updateTeamMembershipTeamMembershipUpdateTeamMembershipPayloadTeamMembershipUser {
+	return v.User
+}
+
+// updateTeamMembershipTeamMembershipUpdateTeamMembershipPayloadTeamMembershipTeam includes the requested fields of the GraphQL type Team.
+// The GraphQL type's documentation follows.
+//
+// A team is the primary organizational unit in Linear. Issues belong to teams, and
+// each team has its own workflow states, cycles, labels, and settings. Teams can
+// be public (visible to all workspace members) or private (visible only to team
+// members). Teams can also have sub-teams that inherit settings from their parent.
+type updateTeamMembershipTeamMembershipUpdateTeamMembershipPayloadTeamMembershipTeam struct {
+	// The unique identifier of the entity.
+	Id string `json:"id"`
+}
+
+// GetId returns updateTeamMembershipTeamMembershipUpdateTeamMembershipPayloadTeamMembershipTeam.Id, and is useful for accessing the field via an interface.
+func (v *updateTeamMembershipTeamMembershipUpdateTeamMembershipPayloadTeamMembershipTeam) GetId() string {
+	return v.Id
+}
+
+// updateTeamMembershipTeamMembershipUpdateTeamMembershipPayloadTeamMembershipUser includes the requested fields of the GraphQL type User.
+// The GraphQL type's documentation follows.
+//
+// A user that belongs to a workspace. Users can have different roles (admin,
+// member, guest, or app) that determine their level of access. Users can be
+// members of multiple teams, and can be active or deactivated. Guest users have
+// limited access scoped to specific teams they are invited to.
+type updateTeamMembershipTeamMembershipUpdateTeamMembershipPayloadTeamMembershipUser struct {
+	// The unique identifier of the entity.
+	Id string `json:"id"`
+}
+
+// GetId returns updateTeamMembershipTeamMembershipUpdateTeamMembershipPayloadTeamMembershipUser.Id, and is useful for accessing the field via an interface.
+func (v *updateTeamMembershipTeamMembershipUpdateTeamMembershipPayloadTeamMembershipUser) GetId() string {
+	return v.Id
+}
+
 // updateTeamResponse is returned by updateTeam on success.
 type updateTeamResponse struct {
 	// Updates a team's settings, properties, or configuration. Requires team owner
@@ -5471,6 +5848,47 @@ fragment Team on Team {
 	return &data, err
 }
 
+func createTeamMembership(
+	ctx context.Context,
+	client graphql.Client,
+	input TeamMembershipCreateInput,
+) (*createTeamMembershipResponse, error) {
+	req := &graphql.Request{
+		OpName: "createTeamMembership",
+		Query: `
+mutation createTeamMembership ($input: TeamMembershipCreateInput!) {
+	teamMembershipCreate(input: $input) {
+		teamMembership {
+			id
+			owner
+			team {
+				id
+			}
+			user {
+				id
+			}
+		}
+	}
+}
+`,
+		Variables: &__createTeamMembershipInput{
+			Input: input,
+		},
+	}
+	var err error
+
+	var data createTeamMembershipResponse
+	resp := &graphql.Response{Data: &data}
+
+	err = client.MakeRequest(
+		ctx,
+		req,
+		resp,
+	)
+
+	return &data, err
+}
+
 func createWorkflowState(
 	ctx context.Context,
 	client graphql.Client,
@@ -5633,6 +6051,38 @@ mutation deleteTeam ($key: String!) {
 	var err error
 
 	var data deleteTeamResponse
+	resp := &graphql.Response{Data: &data}
+
+	err = client.MakeRequest(
+		ctx,
+		req,
+		resp,
+	)
+
+	return &data, err
+}
+
+func deleteTeamMembership(
+	ctx context.Context,
+	client graphql.Client,
+	id string,
+) (*deleteTeamMembershipResponse, error) {
+	req := &graphql.Request{
+		OpName: "deleteTeamMembership",
+		Query: `
+mutation deleteTeamMembership ($id: String!) {
+	teamMembershipDelete(id: $id) {
+		success
+	}
+}
+`,
+		Variables: &__deleteTeamMembershipInput{
+			Id: id,
+		},
+	}
+	var err error
+
+	var data deleteTeamMembershipResponse
 	resp := &graphql.Response{Data: &data}
 
 	err = client.MakeRequest(
@@ -5886,6 +6336,45 @@ fragment Team on Team {
 	var err error
 
 	var data getTeamResponse
+	resp := &graphql.Response{Data: &data}
+
+	err = client.MakeRequest(
+		ctx,
+		req,
+		resp,
+	)
+
+	return &data, err
+}
+
+func getTeamMembership(
+	ctx context.Context,
+	client graphql.Client,
+	id string,
+) (*getTeamMembershipResponse, error) {
+	req := &graphql.Request{
+		OpName: "getTeamMembership",
+		Query: `
+query getTeamMembership ($id: String!) {
+	teamMembership(id: $id) {
+		id
+		owner
+		team {
+			id
+		}
+		user {
+			id
+		}
+	}
+}
+`,
+		Variables: &__getTeamMembershipInput{
+			Id: id,
+		},
+	}
+	var err error
+
+	var data getTeamMembershipResponse
 	resp := &graphql.Response{Data: &data}
 
 	err = client.MakeRequest(
@@ -6423,6 +6912,49 @@ fragment Team on Team {
 	var err error
 
 	var data updateTeamResponse
+	resp := &graphql.Response{Data: &data}
+
+	err = client.MakeRequest(
+		ctx,
+		req,
+		resp,
+	)
+
+	return &data, err
+}
+
+func updateTeamMembership(
+	ctx context.Context,
+	client graphql.Client,
+	input TeamMembershipUpdateInput,
+	id string,
+) (*updateTeamMembershipResponse, error) {
+	req := &graphql.Request{
+		OpName: "updateTeamMembership",
+		Query: `
+mutation updateTeamMembership ($input: TeamMembershipUpdateInput!, $id: String!) {
+	teamMembershipUpdate(id: $id, input: $input) {
+		teamMembership {
+			id
+			owner
+			team {
+				id
+			}
+			user {
+				id
+			}
+		}
+	}
+}
+`,
+		Variables: &__updateTeamMembershipInput{
+			Input: input,
+			Id:    id,
+		},
+	}
+	var err error
+
+	var data updateTeamMembershipResponse
 	resp := &graphql.Response{Data: &data}
 
 	err = client.MakeRequest(

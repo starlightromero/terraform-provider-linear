@@ -101,6 +101,7 @@ func (p *LinearProvider) Resources(ctx context.Context) []func() resource.Resour
 	return []func() resource.Resource{
 		NewTeamResource,
 		NewTeamLabelResource,
+		NewTeamMembershipResource,
 		NewTeamWorkflowResource,
 		NewTemplateResource,
 		NewWorkflowStateResource,

@@ -1,0 +1,48 @@
+query getTeamMembership($id: String!) {
+  teamMembership(id: $id) {
+    id
+    owner
+    team {
+      id
+    }
+    user {
+      id
+    }
+  }
+}
+
+mutation createTeamMembership($input: TeamMembershipCreateInput!) {
+  teamMembershipCreate(input: $input) {
+    teamMembership {
+      id
+      owner
+      team {
+        id
+      }
+      user {
+        id
+      }
+    }
+  }
+}
+
+mutation updateTeamMembership($input: TeamMembershipUpdateInput!, $id: String!) {
+  teamMembershipUpdate(id: $id, input: $input) {
+    teamMembership {
+      id
+      owner
+      team {
+        id
+      }
+      user {
+        id
+      }
+    }
+  }
+}
+
+mutation deleteTeamMembership($id: String!) {
+  teamMembershipDelete(id: $id) {
+    success
+  }
+}
