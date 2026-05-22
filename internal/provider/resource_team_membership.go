@@ -109,7 +109,7 @@ func (r *TeamMembershipResource) Create(ctx context.Context, req resource.Create
 		return
 	}
 
-	response, err := createTeamMembership(ctx, *r.client, data.TeamId.ValueString(), data.UserId.ValueString())
+	response, err := createTeamMembershipMinimal(ctx, *r.client, data.TeamId.ValueString(), data.UserId.ValueString())
 
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create team membership, got error: %s", err))
@@ -212,4 +212,41 @@ func (r *TeamMembershipResource) Delete(ctx context.Context, req resource.Delete
 
 func (r *TeamMembershipResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
+}
+
+// createTeamMembershipMinimal calls teamMembershipCreate with only the required
+// fields (teamId, userId). The generated createTeamMembership function sends all
+// fields including zero-value optionals (owner: false, sortOrder: 0) which
+// Linear's API rejects as an internal field validation error.
+func createTeamMembershipMinimal(ctx context.Context, client graphql.Client, teamId, userId string) (*createTeamMembershipResponse, error) {
+	req := &graphql.Request{
+		OpName: "createTeamMembership",
+		Query: `mutation createTeamMembership($input: TeamMembershipCreateInput!) {
+	teamMembershipCreate(input: $input) {
+		teamMembership {
+			id
+			owner
+			team { id }
+			user { id }
+		}
+	}
+}`,
+		Variables: &struct {
+			Input struct {
+				TeamId string `json:"teamId"`
+				UserId string `json:"userId"`
+			} `json:"input"`
+		}{
+			Input: struct {
+				TeamId string `json:"teamId"`
+				UserId string `json:"userId"`
+			}{TeamId: teamId, UserId: userId},
+		},
+	}
+
+	var resp createTeamMembershipResponse
+	if err := client.MakeRequest(ctx, req, &graphql.Response{Data: &resp}); err != nil {
+		return nil, err
+	}
+	return &resp, nil
 }
