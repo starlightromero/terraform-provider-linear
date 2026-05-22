@@ -1229,35 +1229,6 @@ func (v *TeamCreateInput) GetSlackAutoCreateProjectChannel() bool {
 	return v.SlackAutoCreateProjectChannel
 }
 
-// Input for creating a new team membership.
-type TeamMembershipCreateInput struct {
-	// The identifier in UUID v4 format. If none is provided, the backend will generate one.
-	Id string `json:"id"`
-	// The identifier of the user associated with the membership.
-	UserId string `json:"userId"`
-	// The identifier of the team associated with the membership.
-	TeamId string `json:"teamId"`
-	// Internal. Whether the user is the owner of the team.
-	Owner bool `json:"owner"`
-	// The position of the item in the users list.
-	SortOrder float64 `json:"sortOrder"`
-}
-
-// GetId returns TeamMembershipCreateInput.Id, and is useful for accessing the field via an interface.
-func (v *TeamMembershipCreateInput) GetId() string { return v.Id }
-
-// GetUserId returns TeamMembershipCreateInput.UserId, and is useful for accessing the field via an interface.
-func (v *TeamMembershipCreateInput) GetUserId() string { return v.UserId }
-
-// GetTeamId returns TeamMembershipCreateInput.TeamId, and is useful for accessing the field via an interface.
-func (v *TeamMembershipCreateInput) GetTeamId() string { return v.TeamId }
-
-// GetOwner returns TeamMembershipCreateInput.Owner, and is useful for accessing the field via an interface.
-func (v *TeamMembershipCreateInput) GetOwner() bool { return v.Owner }
-
-// GetSortOrder returns TeamMembershipCreateInput.SortOrder, and is useful for accessing the field via an interface.
-func (v *TeamMembershipCreateInput) GetSortOrder() float64 { return v.SortOrder }
-
 // Input for updating an existing team membership.
 type TeamMembershipUpdateInput struct {
 	// Internal. Whether the user is the owner of the team.
@@ -2098,11 +2069,15 @@ func (v *__createTeamInput) GetInput() TeamCreateInput { return v.Input }
 
 // __createTeamMembershipInput is used internally by genqlient
 type __createTeamMembershipInput struct {
-	Input TeamMembershipCreateInput `json:"input"`
+	TeamId string `json:"teamId"`
+	UserId string `json:"userId"`
 }
 
-// GetInput returns __createTeamMembershipInput.Input, and is useful for accessing the field via an interface.
-func (v *__createTeamMembershipInput) GetInput() TeamMembershipCreateInput { return v.Input }
+// GetTeamId returns __createTeamMembershipInput.TeamId, and is useful for accessing the field via an interface.
+func (v *__createTeamMembershipInput) GetTeamId() string { return v.TeamId }
+
+// GetUserId returns __createTeamMembershipInput.UserId, and is useful for accessing the field via an interface.
+func (v *__createTeamMembershipInput) GetUserId() string { return v.UserId }
 
 // __createWorkflowStateInput is used internally by genqlient
 type __createWorkflowStateInput struct {
@@ -5851,13 +5826,14 @@ fragment Team on Team {
 func createTeamMembership(
 	ctx context.Context,
 	client graphql.Client,
-	input TeamMembershipCreateInput,
+	teamId string,
+	userId string,
 ) (*createTeamMembershipResponse, error) {
 	req := &graphql.Request{
 		OpName: "createTeamMembership",
 		Query: `
-mutation createTeamMembership ($input: TeamMembershipCreateInput!) {
-	teamMembershipCreate(input: $input) {
+mutation createTeamMembership ($teamId: String!, $userId: String!) {
+	teamMembershipCreate(input: {teamId:$teamId,userId:$userId}) {
 		teamMembership {
 			id
 			owner
@@ -5872,7 +5848,8 @@ mutation createTeamMembership ($input: TeamMembershipCreateInput!) {
 }
 `,
 		Variables: &__createTeamMembershipInput{
-			Input: input,
+			TeamId: teamId,
+			UserId: userId,
 		},
 	}
 	var err error

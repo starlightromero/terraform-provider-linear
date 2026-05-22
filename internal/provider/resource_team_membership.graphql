@@ -11,8 +11,8 @@ query getTeamMembership($id: String!) {
   }
 }
 
-mutation createTeamMembership($input: TeamMembershipCreateInput!) {
-  teamMembershipCreate(input: $input) {
+mutation createTeamMembership($teamId: String!, $userId: String!) {
+  teamMembershipCreate(input: { teamId: $teamId, userId: $userId }) {
     teamMembership {
       id
       owner

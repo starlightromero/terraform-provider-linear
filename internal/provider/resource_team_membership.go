@@ -109,13 +109,7 @@ func (r *TeamMembershipResource) Create(ctx context.Context, req resource.Create
 		return
 	}
 
-	input := TeamMembershipCreateInput{
-		TeamId: data.TeamId.ValueString(),
-		UserId: data.UserId.ValueString(),
-		Owner:  data.Owner.ValueBool(),
-	}
-
-	response, err := createTeamMembership(ctx, *r.client, input)
+	response, err := createTeamMembership(ctx, *r.client, data.TeamId.ValueString(), data.UserId.ValueString())
 
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create team membership, got error: %s", err))
