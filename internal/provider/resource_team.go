@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"strings"
 	"regexp"
 	"sort"
 
@@ -911,6 +912,13 @@ func (r *TeamResource) Read(ctx context.Context, req resource.ReadRequest, resp 
 	response, err := getTeam(ctx, *r.client, data.Key.ValueString())
 
 	if err != nil {
+		// Linear's GraphQL API returns 'Entity not found: Team' when the
+		// team key doesn't match any existing team. This is distinct from
+		// connection errors which would not contain this specific message.
+		if strings.Contains(err.Error(), "Entity not found: Team") {
+			resp.State.RemoveResource(ctx)
+			return
+		}
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read team, got error: %s", err))
 		return
 	}
