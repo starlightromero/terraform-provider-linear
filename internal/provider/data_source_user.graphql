@@ -1,0 +1,25 @@
+query getUser($id: String!) {
+  user(id: $id) {
+    id
+    name
+    displayName
+    email
+    active
+    admin
+    url
+  }
+}
+
+query getUsers {
+  users {
+    nodes {
+      id
+      name
+      displayName
+      email
+      active
+      admin
+      url
+    }
+  }
+}

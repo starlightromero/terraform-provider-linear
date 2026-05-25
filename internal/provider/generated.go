@@ -2173,6 +2173,14 @@ type __getTemplateInput struct {
 // GetId returns __getTemplateInput.Id, and is useful for accessing the field via an interface.
 func (v *__getTemplateInput) GetId() string { return v.Id }
 
+// __getUserInput is used internally by genqlient
+type __getUserInput struct {
+	Id string `json:"id"`
+}
+
+// GetId returns __getUserInput.Id, and is useful for accessing the field via an interface.
+func (v *__getUserInput) GetId() string { return v.Id }
+
 // __getWorkflowStateInput is used internally by genqlient
 type __getWorkflowStateInput struct {
 	Id string `json:"id"`
@@ -3872,6 +3880,124 @@ func (v *getTemplateTemplate) __premarshalJSON() (*__premarshalgetTemplateTempla
 	retval.TemplateData = v.Template.TemplateData
 	return &retval, nil
 }
+
+// getUserResponse is returned by getUser on success.
+type getUserResponse struct {
+	// Fetches a specific user by their ID.
+	User getUserUser `json:"user"`
+}
+
+// GetUser returns getUserResponse.User, and is useful for accessing the field via an interface.
+func (v *getUserResponse) GetUser() getUserUser { return v.User }
+
+// getUserUser includes the requested fields of the GraphQL type User.
+// The GraphQL type's documentation follows.
+//
+// A user that belongs to a workspace. Users can have different roles (admin,
+// member, guest, or app) that determine their level of access. Users can be
+// members of multiple teams, and can be active or deactivated. Guest users have
+// limited access scoped to specific teams they are invited to.
+type getUserUser struct {
+	// The unique identifier of the entity.
+	Id string `json:"id"`
+	// The user's full name.
+	Name string `json:"name"`
+	// The user's display (nick) name. Must be unique within the workspace.
+	DisplayName string `json:"displayName"`
+	// The user's email address.
+	Email string `json:"email"`
+	// Whether the user account is active or disabled (suspended).
+	Active bool `json:"active"`
+	// Whether the user is a workspace administrator. On Free plans, all members are treated as admins.
+	Admin bool `json:"admin"`
+	// User's profile URL.
+	Url string `json:"url"`
+}
+
+// GetId returns getUserUser.Id, and is useful for accessing the field via an interface.
+func (v *getUserUser) GetId() string { return v.Id }
+
+// GetName returns getUserUser.Name, and is useful for accessing the field via an interface.
+func (v *getUserUser) GetName() string { return v.Name }
+
+// GetDisplayName returns getUserUser.DisplayName, and is useful for accessing the field via an interface.
+func (v *getUserUser) GetDisplayName() string { return v.DisplayName }
+
+// GetEmail returns getUserUser.Email, and is useful for accessing the field via an interface.
+func (v *getUserUser) GetEmail() string { return v.Email }
+
+// GetActive returns getUserUser.Active, and is useful for accessing the field via an interface.
+func (v *getUserUser) GetActive() bool { return v.Active }
+
+// GetAdmin returns getUserUser.Admin, and is useful for accessing the field via an interface.
+func (v *getUserUser) GetAdmin() bool { return v.Admin }
+
+// GetUrl returns getUserUser.Url, and is useful for accessing the field via an interface.
+func (v *getUserUser) GetUrl() string { return v.Url }
+
+// getUsersResponse is returned by getUsers on success.
+type getUsersResponse struct {
+	// All users in the workspace. Supports filtering, sorting, and pagination.
+	Users getUsersUsersUserConnection `json:"users"`
+}
+
+// GetUsers returns getUsersResponse.Users, and is useful for accessing the field via an interface.
+func (v *getUsersResponse) GetUsers() getUsersUsersUserConnection { return v.Users }
+
+// getUsersUsersUserConnection includes the requested fields of the GraphQL type UserConnection.
+type getUsersUsersUserConnection struct {
+	Nodes []getUsersUsersUserConnectionNodesUser `json:"nodes"`
+}
+
+// GetNodes returns getUsersUsersUserConnection.Nodes, and is useful for accessing the field via an interface.
+func (v *getUsersUsersUserConnection) GetNodes() []getUsersUsersUserConnectionNodesUser {
+	return v.Nodes
+}
+
+// getUsersUsersUserConnectionNodesUser includes the requested fields of the GraphQL type User.
+// The GraphQL type's documentation follows.
+//
+// A user that belongs to a workspace. Users can have different roles (admin,
+// member, guest, or app) that determine their level of access. Users can be
+// members of multiple teams, and can be active or deactivated. Guest users have
+// limited access scoped to specific teams they are invited to.
+type getUsersUsersUserConnectionNodesUser struct {
+	// The unique identifier of the entity.
+	Id string `json:"id"`
+	// The user's full name.
+	Name string `json:"name"`
+	// The user's display (nick) name. Must be unique within the workspace.
+	DisplayName string `json:"displayName"`
+	// The user's email address.
+	Email string `json:"email"`
+	// Whether the user account is active or disabled (suspended).
+	Active bool `json:"active"`
+	// Whether the user is a workspace administrator. On Free plans, all members are treated as admins.
+	Admin bool `json:"admin"`
+	// User's profile URL.
+	Url string `json:"url"`
+}
+
+// GetId returns getUsersUsersUserConnectionNodesUser.Id, and is useful for accessing the field via an interface.
+func (v *getUsersUsersUserConnectionNodesUser) GetId() string { return v.Id }
+
+// GetName returns getUsersUsersUserConnectionNodesUser.Name, and is useful for accessing the field via an interface.
+func (v *getUsersUsersUserConnectionNodesUser) GetName() string { return v.Name }
+
+// GetDisplayName returns getUsersUsersUserConnectionNodesUser.DisplayName, and is useful for accessing the field via an interface.
+func (v *getUsersUsersUserConnectionNodesUser) GetDisplayName() string { return v.DisplayName }
+
+// GetEmail returns getUsersUsersUserConnectionNodesUser.Email, and is useful for accessing the field via an interface.
+func (v *getUsersUsersUserConnectionNodesUser) GetEmail() string { return v.Email }
+
+// GetActive returns getUsersUsersUserConnectionNodesUser.Active, and is useful for accessing the field via an interface.
+func (v *getUsersUsersUserConnectionNodesUser) GetActive() bool { return v.Active }
+
+// GetAdmin returns getUsersUsersUserConnectionNodesUser.Admin, and is useful for accessing the field via an interface.
+func (v *getUsersUsersUserConnectionNodesUser) GetAdmin() bool { return v.Admin }
+
+// GetUrl returns getUsersUsersUserConnectionNodesUser.Url, and is useful for accessing the field via an interface.
+func (v *getUsersUsersUserConnectionNodesUser) GetUrl() string { return v.Url }
 
 // getWorkflowStateResponse is returned by getWorkflowState on success.
 type getWorkflowStateResponse struct {
@@ -6025,6 +6151,80 @@ fragment Template on Template {
 	var err error
 
 	var data getTemplateResponse
+	resp := &graphql.Response{Data: &data}
+
+	err = client.MakeRequest(
+		ctx,
+		req,
+		resp,
+	)
+
+	return &data, err
+}
+
+func getUser(
+	ctx context.Context,
+	client graphql.Client,
+	id string,
+) (*getUserResponse, error) {
+	req := &graphql.Request{
+		OpName: "getUser",
+		Query: `
+query getUser ($id: String!) {
+	user(id: $id) {
+		id
+		name
+		displayName
+		email
+		active
+		admin
+		url
+	}
+}
+`,
+		Variables: &__getUserInput{
+			Id: id,
+		},
+	}
+	var err error
+
+	var data getUserResponse
+	resp := &graphql.Response{Data: &data}
+
+	err = client.MakeRequest(
+		ctx,
+		req,
+		resp,
+	)
+
+	return &data, err
+}
+
+func getUsers(
+	ctx context.Context,
+	client graphql.Client,
+) (*getUsersResponse, error) {
+	req := &graphql.Request{
+		OpName: "getUsers",
+		Query: `
+query getUsers {
+	users {
+		nodes {
+			id
+			name
+			displayName
+			email
+			active
+			admin
+			url
+		}
+	}
+}
+`,
+	}
+	var err error
+
+	var data getUsersResponse
 	resp := &graphql.Response{Data: &data}
 
 	err = client.MakeRequest(
